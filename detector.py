@@ -3,7 +3,7 @@ import torch
 import cv2
 import numpy as np
 import os
-from urllib.request import Request, urlopen
+import requests
 
 # Get the YOLO NAS small model with pretrained weights on COCO dataset
 yolo_nas = models.get("yolo_nas_l", pretrained_weights="coco")
@@ -36,11 +36,7 @@ class Detector:
             class_names = detections.class_names
 
             # Leer la imagen
-            req = Request(
-                url=image_path, 
-                headers={'User-Agent': 'Mozilla/5.0'}
-            )
-            resp = urlopen(req)
+            resp = requests.get(image_path, stream=True, headers={'User-Agent': 'Mozilla/5.0'} ).raw
             image = np.asarray(bytearray(resp.read()), dtype="uint8")
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
