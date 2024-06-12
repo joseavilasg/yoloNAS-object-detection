@@ -6,7 +6,7 @@ import torch
 
 # Set the device to use GPU if available, otherwise use CPU
 device = 'cuda' if torch.cuda.is_available() else "cpu"
-print(device)
+print("using device: ", device)
 
 # Define a context manager to get the model object and ensure it is properly cleaned up after use
 @contextmanager

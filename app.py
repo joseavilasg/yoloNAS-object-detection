@@ -11,7 +11,7 @@ if "process" not in ss:
 # Function to start the webcam
 def run_webcam():
     # Use session state to access the global process variable
-    ss.process= subprocess.Popen(['python', 'yolonas_webcam.py'])
+    ss.process= subprocess.Popen(["python", "yolonas_webcam.py"])
     st.write("Webcam process started...")
     #print("process started...")
 
@@ -32,6 +32,10 @@ detector = Detector()
 # Create the sidebar options for the user to choose from
 st.sidebar.title("Seleccione imágenes o videos")
 file_options = st.sidebar.radio(label="**Tipo de detección**",options=["imagen","video","detección en tiempo real"])
+filter_options = ["person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "couch", "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
+filter_options.sort()
+filter_options.insert(0, "all")
+filter_option = st.sidebar.selectbox(label="**Filtros**",options=filter_options)
 
 
 # If the user selects image detection
@@ -45,8 +49,9 @@ if file_options =="imagen":
     if imagen:
         # Define the path for the output image
         out_path = os.path.join("im_detections", "pred_0.jpg")
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
         # Call the onImage method of the Detector object to perform object detection on the image
-        detector.onImage(imagen)
+        detector.onImage(imagen, out_path, filter_option)
         # Display the original image and the image with object detections
         st.image(imagen, caption="Imagen original")
         st.image(out_path, caption="Detección de objetos")
@@ -75,7 +80,7 @@ elif file_options =="video":
         # If the processed video exists
         if os.path.exists("detection.mp4"):
             # Open the processed video file
-            video_file = open('detection.mp4', 'rb')
+            video_file = open("detection.mp4", "rb")
             # Read the video bytes
             video_bytes = video_file.read()
             # Create a download button for the processed video
