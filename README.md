@@ -31,3 +31,13 @@ To start real-time object detection using the webcam, run the following command:
 python yolonas_webcam.py
 ```
 
+### Others
+To export conda environment
+```shell
+conda env export --no-builds > environment.yml
+```
+
+To create conda environment
+```shell
+conda env create -f environment.yml
+```
